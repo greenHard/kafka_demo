@@ -14,16 +14,14 @@ import java.util.Properties;
  * 4. 关闭生产者实例。
  */
 public class KafkaProducerDemo {
-    public static final String brokerList = "localhost:9092";
-    public static final String topic = "topic-demo";
+    public static final String brokerList = "10.153.1.78:9092";
+    public static final String topic = "topicDemo";
 
     public static Properties initConfig() {
         Properties props = new Properties();
         props.put("bootstrap.servers", brokerList);
-        props.put("key.serializer",
-                "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer",
-                "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("client.id", "producer.client.id.demo");
         return props;
     }
@@ -31,9 +29,12 @@ public class KafkaProducerDemo {
     public static void main(String[] args) {
         Properties props = initConfig();
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
-        ProducerRecord<String, String> record = new ProducerRecord<>(topic, "Hello, Kafka!");
+
         try {
+            ProducerRecord<String, String> record = new ProducerRecord<>(topic, "Hello, Kafka!");
             producer.send(record);
+            producer.flush();
+            producer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
